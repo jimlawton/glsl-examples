@@ -1,41 +1,36 @@
-//
-// Vertex shader for procedural bricks
-//
-// Authors: Dave Baldwin, Steve Koren, Randi Rost
-//          based on a shader by Darwyn Peachey
-//
-// Copyright (c) 2002-2006 3Dlabs Inc. Ltd. 
-//
-// See 3Dlabs-License.txt for license information
-//
 
-uniform vec3 LightPosition;
+in vec4 mcVertex;
+in vec3 mcNormal;
 
-const float SpecularContribution = 0.3;
-const float DiffuseContribution  = 1.0 - SpecularContribution;
+uniform mat4 mvMatrix;
+uniform mat4 mvpMatrix;
+uniform mat3 normalMatrix;
 
-varying float LightIntensity;
-varying vec2  MCposition;
+uniform vec3 lightPosition;
+
+const float specularContribution = 0.3;
+const float diffuseContribution = 1.0 - specularContribution;
+
+out float lightIntensity;
+out vec2 mcPosition;
 
 void main()
 {
-    vec3 ecPosition = vec3(gl_ModelViewMatrix * gl_Vertex);
-    vec3 tnorm      = normalize(gl_NormalMatrix * gl_Normal);
-    vec3 lightVec   = normalize(LightPosition - ecPosition);
+    vec3 ecPosition = vec3(mvMatrix * mcVertex);
+    vec3 tnorm = normalize(normalMatrix * mcNormal);
+    vec3 lightVec = normalize(lightPosition - ecPosition);
     vec3 reflectVec = reflect(-lightVec, tnorm);
-    vec3 viewVec    = normalize(-ecPosition);
-    float diffuse   = max(dot(lightVec, tnorm), 0.0);
-    float spec      = 0.0;
+    vec3 viewVec = normalize(-ecPosition);
+    float diffuse = max(dot(lightVec, tnorm), 0.0);
+    float spec = 0.0;
 
-    if (diffuse > 0.0)
-    {
+    if (diffuse > 0.0) {
         spec = max(dot(reflectVec, viewVec), 0.0);
         spec = pow(spec, 16.0);
     }
-
-    LightIntensity  = DiffuseContribution * diffuse +
-                      SpecularContribution * spec;
-
-    MCposition      = gl_Vertex.xy;
-    gl_Position     = ftransform();
+    
+    lightIntensity = diffuseContribution * diffuse + specularContribution * spec;
+    
+    mcPosition = mcVertex.xy;
+    gl_Position = mvpMatrix * mcVertex;
 }

@@ -1,36 +1,28 @@
-//
-// Fragment shader for procedural bricks
-//
-// Authors: Dave Baldwin, Steve Koren, Randi Rost
-//          based on a shader by Darwyn Peachey
-//
-// Copyright (c) 2002-2006 3Dlabs Inc. Ltd. 
-//
-// See 3Dlabs-License.txt for license information
-//
 
-uniform vec3  BrickColor, MortarColor;
-uniform vec2  BrickSize;
-uniform vec2  BrickPct;
+uniform vec3 brickColour, mortarColour;
+uniform vec3 brickSize;
+uniform vec2 brickPct;
 
-varying vec2  MCposition;
-varying float LightIntensity;
+in vec2 mcPosition;
+in float lightIntensity;
+
+out vec4 fragColour;
 
 void main()
 {
-    vec3  color;
-    vec2  position, useBrick;
-    
-    position = MCposition / BrickSize;
+    vec3 colour;
+    vec2 position, useBrick;
+
+    position = mcPosition / brickSize;
 
     if (fract(position.y * 0.5) > 0.5)
-        position.x += 0.5;
+        poition.x += 0.5;
 
     position = fract(position);
 
-    useBrick = step(position, BrickPct);
+    useBrick = step(position, brickPct);
 
-    color  = mix(MortarColor, BrickColor, useBrick.x * useBrick.y);
-    color *= LightIntensity;
-    gl_FragColor = vec4(color, 1.0);
+    colour = mix(mortarColour, brickColour, useBrick.x * useBrick.y);
+    colour *= lightIntensity;
+    fragColour = vec4(colour, 1.0);
 }
