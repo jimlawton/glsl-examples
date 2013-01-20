@@ -1,0 +1,36 @@
+
+in vec4 mcVertex;
+in vec3 mcNormal;
+
+uniform mat4 mvMatrix;
+uniform mat4 mvpMatrix;
+uniform mat3 normalMatrix;
+
+uniform vec3 lightPosition;
+
+const float specularContribution = 0.3;
+const float diffuseContribution = 1.0 - specularContribution;
+
+out float lightIntensity;
+out vec2 mcPosition;
+
+void main()
+{
+    vec3 ecPosition = vec3(mvMatrix * mcVertex);
+    vec3 tnorm = normalize(normalMatrix * mcNormal);
+    vec3 lightVec = normalize(lightPosition - ecPosition);
+    vec3 reflectVec = reflect(-lightVec, tnorm);
+    vec3 viewVec = normalize(-ecPosition);
+    float diffuse = max(dot(lightVec, tnorm), 0.0);
+    float spec = 0.0;
+
+    if (diffuse > 0.0) {
+        spec = max(dot(reflectVec, viewVec), 0.0);
+        spec = pow(spec, 16.0);
+    }
+    
+    lightIntensity = diffuseContribution * diffuse + specularContribution * spec;
+    
+    mcPosition = mcVertex.xy;
+    gl_Position = mvpMatrix * mcVertex;
+}
