@@ -15,7 +15,7 @@
 #include <GL/glext.h>
 #include <GL/glut.h>
 
-#include "shader.h"
+#include "util.h"
 #include "scene.h"
 
 static GLuint program;

@@ -6,8 +6,8 @@
 #include <GL/glext.h>
 #include <GL/glut.h>
 
-#include "scene.h"
 #include "util.h"
+#include "scene.h"
 
 static const int WINDOW_WIDTH = 400;
 static const int WINDOW_HEIGHT = 300;
