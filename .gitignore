@@ -1,2 +1,3 @@
 *.o
 glsl_example
+glsl_compile
