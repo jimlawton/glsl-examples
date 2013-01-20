@@ -97,14 +97,14 @@ void sceneInit(void)
 
     program = glCreateProgram();
 
-    shader = compileShader(GL_VERTEX_SHADER, "data/brick_shader.vp");
+    shader = compileShader(GL_VERTEX_SHADER, "shaders/brick_shader.vp");
     if (shader != 0) {
         glAttachShader(program, shader);
         // Mark the shader for deletion when the program is destroyed.
         glDeleteShader(shader);
     }
 
-    shader = compileShader(GL_FRAGMENT_SHADER, "data/brick_shader.fp");
+    shader = compileShader(GL_FRAGMENT_SHADER, "shaders/brick_shader.fp");
     if (shader != 0) {
         glAttachShader(program, shader);
         // Mark the shader for deletion when the program is destroyed.
